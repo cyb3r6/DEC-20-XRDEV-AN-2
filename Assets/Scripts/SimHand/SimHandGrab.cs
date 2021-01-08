@@ -18,6 +18,8 @@ public class SimHandGrab : MonoBehaviour
 
     public float throwForce = 1;
 
+    private GrabbableObjectSimHand grabbableObejctSimHand = null;
+
     private void OnTriggerEnter(Collider other)
     {
         collidingObject = other.gameObject;
@@ -29,9 +31,6 @@ public class SimHandGrab : MonoBehaviour
             collidingObject = null;
         }
     }
-
-
-
     void Start()
     {
 
@@ -74,7 +73,7 @@ public class SimHandGrab : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Mouse0) && heldObject)
         {
-            heldObject.BroadcastMessage("Interact");
+            //heldObject.BroadcastMessage("Interact");
         }
     }
 
@@ -84,10 +83,31 @@ public class SimHandGrab : MonoBehaviour
         heldObject.transform.SetParent(this.transform);
         heldObject.GetComponent<Rigidbody>().isKinematic = true;
 
+        #region Interaction using GetComponent
+
+        grabbableObejctSimHand = heldObject.GetComponent<GrabbableObjectSimHand>();
+        if (grabbableObejctSimHand)
+        {
+            grabbableObejctSimHand.isBeingHeld = true;
+            grabbableObejctSimHand.simHandController = this;
+        }
+
+        #endregion
+
     }
 
     public void Release()
     {
+        #region Interaction using GetComponent
+
+        if (grabbableObejctSimHand)
+        {
+            grabbableObejctSimHand.isBeingHeld = false;
+            grabbableObejctSimHand.simHandController = null;
+        }
+
+        #endregion
+
         // throw!
         Rigidbody rb = heldObject.GetComponent<Rigidbody>();
         rb.velocity = velocity * throwForce;

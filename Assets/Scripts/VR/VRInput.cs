@@ -9,6 +9,8 @@ public class VRInput : MonoBehaviour
     public float triggerValue;
     public float gripValue;
 
+    
+
     public Vector3 velocity;
     public Vector3 angularVelocity;
 
@@ -17,7 +19,8 @@ public class VRInput : MonoBehaviour
 
     private string triggerAxis;
     private string gripAxis;
-
+    private string triggerButton;
+    private string gripButton;
 
 
     
@@ -27,11 +30,15 @@ public class VRInput : MonoBehaviour
         {
             triggerAxis = "LeftTrigger";
             gripAxis = "LeftGrip";
+            triggerButton = "LeftTriggerButton";
+            gripButton = "LeftGripButton";
         }
         else
         {
             triggerAxis = "RightTrigger";
             gripAxis = "RightGrip";
+            triggerButton = "RightTriggerButton";
+            gripButton = "RightGripButton";
         }
     }
 
@@ -40,6 +47,16 @@ public class VRInput : MonoBehaviour
     {
         triggerValue = Input.GetAxis(triggerAxis);
         gripValue = Input.GetAxis(gripAxis);
+
+        if (Input.GetButtonDown(triggerButton))
+        {
+            // do some stuff here
+        }
+
+        if (Input.GetButtonUp(triggerButton))
+        {
+            // do some stuff there
+        }
 
         velocity = (this.transform.position - previousPosition) / Time.deltaTime;
         previousPosition = this.transform.position;

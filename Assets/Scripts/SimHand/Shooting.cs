@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shooting : MonoBehaviour
+public class Shooting : GrabbableObjectSimHand
 {
     public GameObject shootingPrefab;
     public Transform spawnPoint;
     public float shootingForce;
     public ShotCounter shotCounter;
+    //private GrabbableObjectSimHand grabbable;
+
+    private void Awake()
+    {
+        //grabbable = GetComponent<GrabbableObjectSimHand>();
+    }
 
     void Update()
     {
+        #region Enrico Suave controls
         /*
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -26,6 +33,15 @@ public class Shooting : MonoBehaviour
 
         }
         */
+        #endregion
+
+        if(isBeingHeld == true)
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                Interact();
+            }
+        }
     }
 
     private void Interact()

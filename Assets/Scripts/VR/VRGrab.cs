@@ -13,6 +13,8 @@ public class VRGrab : MonoBehaviour
     public bool isHeld;                             // object is held
 
     public float throwForce = 1;
+
+    private GrabbableObjectVR grabbale;
     
     void Awake()
     {
@@ -71,10 +73,31 @@ public class VRGrab : MonoBehaviour
         heldObject.transform.SetParent(this.transform);
         heldObject.GetComponent<Rigidbody>().isKinematic = true;
 
+        #region Interaction using GetComponent
+
+        grabbale = heldObject.GetComponent<GrabbableObjectVR>();
+        if (grabbale)
+        {
+            grabbale.isBeingHeld = true;
+            grabbale.controller = controller;
+        }
+
+        #endregion
+
     }
 
     public void Release()
     {
+        #region Interaction using GetComponent
+
+        if (grabbale)
+        {
+            grabbale.isBeingHeld = false;
+            grabbale.controller = null;
+        }
+
+        #endregion
+
         // throw!
         Rigidbody rb = heldObject.GetComponent<Rigidbody>();
         rb.velocity = controller.velocity * throwForce;
