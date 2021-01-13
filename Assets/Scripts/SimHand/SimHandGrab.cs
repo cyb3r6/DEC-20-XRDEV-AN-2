@@ -56,7 +56,8 @@ public class SimHandGrab : MonoBehaviour
                 heldObject = collidingObject;
 
                 // DO THE GRABBING!
-                Grab();
+                //Grab();
+                AdvGrab();
             }
         }
 
@@ -67,7 +68,8 @@ public class SimHandGrab : MonoBehaviour
             if (heldObject)
             {
                 // DO THE RELEASE
-                Release();
+                //Release();
+                AdvRelease();
             }
         }
 
@@ -116,6 +118,53 @@ public class SimHandGrab : MonoBehaviour
         // resetting the held object
         rb.isKinematic = false;
         heldObject.transform.SetParent(null);
+        heldObject = null;
+    }
+
+    public void AdvGrab()
+    {
+        // create the fixed joint between the hand and the heldObject
+        FixedJoint fx = gameObject.AddComponent<FixedJoint>();
+        fx.connectedBody = heldObject.GetComponent<Rigidbody>();
+        fx.breakForce = 100000;
+        fx.breakTorque = 100000;
+
+        #region Interaction using GetComponent
+
+        grabbableObejctSimHand = heldObject.GetComponent<GrabbableObjectSimHand>();
+        if (grabbableObejctSimHand)
+        {
+            grabbableObejctSimHand.isBeingHeld = true;
+            grabbableObejctSimHand.simHandController = this;
+        }
+
+        #endregion
+
+    }
+
+    public void AdvRelease()
+    {
+        if (GetComponent<FixedJoint>())
+        {
+            #region Interaction using GetComponent
+
+            if (grabbableObejctSimHand)
+            {
+                grabbableObejctSimHand.isBeingHeld = false;
+                grabbableObejctSimHand.simHandController = null;
+            }
+
+            #endregion
+
+            // break the fixed joint
+            Destroy(GetComponent<FixedJoint>());
+
+            // throw!
+            Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+            rb.velocity = velocity * throwForce;
+            rb.angularVelocity = angularVelocity * throwForce;
+        }
+
         heldObject = null;
     }
 }
