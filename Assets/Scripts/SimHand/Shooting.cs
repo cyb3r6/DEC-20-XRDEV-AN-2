@@ -44,7 +44,7 @@ public class Shooting : GrabbableObjectSimHand
         }
     }
 
-    private void Interact()
+    public void Interact()
     {
         GameObject shot = Instantiate(shootingPrefab, spawnPoint.position, transform.rotation);
         shot.GetComponent<Rigidbody>().AddForce(shot.transform.forward * shootingForce);

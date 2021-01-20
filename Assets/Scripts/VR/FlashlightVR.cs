@@ -29,7 +29,7 @@ public class FlashlightVR : GrabbableObjectVR
         }
     }
 
-    private void Interact()
+    public override void Interact()
     {
         flashLight.enabled = !flashLight.enabled;
     }

@@ -41,14 +41,31 @@ public class SimHandTeleport : MonoBehaviour
         {
             if(shouldTeleport == true)
             {
+                // get simhand offset
+                float offset = Offset();
+
                 // teleport
-                simhand.position = hitPosition;
+                simhand.position = new Vector3(hitPosition.x, hitPosition.y + offset, hitPosition.z);
 
                 // visuals
                 laser.enabled = false;
 
                 shouldTeleport = false;
             }
+        }
+    }
+
+    public float Offset()
+    {
+        RaycastHit offsetHit;
+        if(Physics.Raycast(transform.position, -transform.up, out offsetHit))
+        {
+            Vector3 distance = transform.position - offsetHit.point;
+            return distance.y;
+        }
+        else
+        {
+            return default;
         }
     }
 }
