@@ -8,8 +8,8 @@ public class VRInput : MonoBehaviour
 
     public float triggerValue;
     public float gripValue;
-    
 
+    public Vector2 thumbstick;
     public Vector3 velocity;
     public Vector3 angularVelocity;
 
@@ -18,9 +18,13 @@ public class VRInput : MonoBehaviour
 
     private string triggerAxis;
     private string gripAxis;
+    private string thumbstickX;
+    private string thumbstickY;
+
     public string triggerButton;
     public string gripButton;
     public string thumbstickButton;
+    
 
     
     void Awake()
@@ -32,6 +36,8 @@ public class VRInput : MonoBehaviour
             triggerButton = "LeftTriggerButton";
             gripButton = "LeftGripButton";
             thumbstickButton = "LeftThumbstickButton";
+            thumbstickX = "LeftThumbstickX";
+            thumbstickY = "LeftThumbstickY";
         }
         else
         {
@@ -40,6 +46,8 @@ public class VRInput : MonoBehaviour
             triggerButton = "RightTriggerButton";
             gripButton = "RightGripButton";
             thumbstickButton = "RightThumbstickButton";
+            thumbstickX = "RightThumbstickX";
+            thumbstickY = "RightThumbstickY";
         }
     }
 
@@ -49,9 +57,12 @@ public class VRInput : MonoBehaviour
         triggerValue = Input.GetAxis(triggerAxis);
         gripValue = Input.GetAxis(gripAxis);
 
+        thumbstick = new Vector2(Input.GetAxis(thumbstickX), Input.GetAxis(thumbstickY));
+
         if (Input.GetButtonDown(triggerButton))
         {
             // do some stuff here
+            // Invoke!
         }
 
         if (Input.GetButtonUp(triggerButton))
