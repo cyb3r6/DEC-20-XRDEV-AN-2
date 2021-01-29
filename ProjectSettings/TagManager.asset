@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Paintable
+  - WreckingCube
   layers:
   - Default
   - TransparentFX
