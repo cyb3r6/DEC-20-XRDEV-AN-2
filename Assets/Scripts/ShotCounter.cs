@@ -29,12 +29,11 @@ public class ShotCounter : MonoBehaviour
     public void ShotsFired()
     {
         descriptionText.text = "Shots fired: " + shotsFired;
-        CountShots(shotsFired);
     }
 
-    public void CountShots(int shots)
+    public void CubesDestroyed()
     {
-        testText.text = "the value of the parameter is: " + shots;
+        descriptionText.text = $"Cubes destoryed {GameManager.instance.numberCubesDestroyed.ToString()}";
     }
 
     public void ResetShotsFired()
@@ -42,5 +41,5 @@ public class ShotCounter : MonoBehaviour
         shotsFired = 0;
         descriptionText.text = ">_<";
     }
-
+    
 }
