@@ -10,6 +10,7 @@ public class ShootingVR : GrabbableObjectVR
     public ShotCounter shotCounter;
     private bool enable;
     
+    /*
     void Update()
     {
         if (isBeingHeld)
@@ -25,8 +26,9 @@ public class ShootingVR : GrabbableObjectVR
             }
         }
     }
+    */
 
-    public override void Interact()
+    public override void OnInteraction()
     {
         GameObject shot = Instantiate(shootingPrefab, spawnPoint.position, transform.rotation);
         shot.GetComponent<Rigidbody>().AddForce(shot.transform.forward * shootingForce);

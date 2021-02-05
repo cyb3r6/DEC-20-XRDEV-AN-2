@@ -19,41 +19,40 @@ public class VRTeleport : MonoBehaviour
         controller = GetComponent<VRInput>();
         laser = GetComponent<LineRenderer>();
         laser.enabled = false;
+
+        controller.OnThumbstickDown.AddListener(RaycastTeleport);
+        controller.OnThumbstickUp.AddListener(Teleport);
     }
 
-    
-    void Update()
+
+    private void RaycastTeleport()
     {
-        if (Input.GetButton(controller.thumbstickButton))
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit))
-            {
-                hitPosition = hit.point;
-                laser.SetPosition(0, transform.position);
-                laser.SetPosition(1, hitPosition);
+            hitPosition = hit.point;
+            laser.SetPosition(0, transform.position);
+            laser.SetPosition(1, hitPosition);
 
-                // visuals
-                laser.enabled = true;
+            // visuals
+            laser.enabled = true;
 
-                shouldTeleport = true;
-            }
-        }
-
-        if (Input.GetButtonUp(controller.thumbstickButton))
-        {
-            if (shouldTeleport == true)
-            {
-                // teleport
-                vrRig.position = hitPosition;
-
-                // visuals
-                laser.enabled = false;
-
-                shouldTeleport = false;
-            }
+            shouldTeleport = true;
         }
     }
 
+    private void Teleport()
+    {
+        if (shouldTeleport == true)
+        {
+            // teleport
+            vrRig.position = hitPosition;
+
+            // visuals
+            laser.enabled = false;
+
+            shouldTeleport = false;
+        }
+    }
 
 }

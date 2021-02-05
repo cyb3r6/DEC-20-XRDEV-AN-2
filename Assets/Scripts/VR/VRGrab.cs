@@ -34,6 +34,7 @@ public class VRGrab : MonoBehaviour
 
                 // DO THE GRABBING!
                 Grab();
+                //AdvGrab();
             }
         }
 
@@ -45,12 +46,13 @@ public class VRGrab : MonoBehaviour
             {
                 // DO THE RELEASE
                 Release();
+                //AdvRelease();
             }
         }
 
         if(controller.triggerValue > 0.8f)
         {
-            heldObject.BroadcastMessage("Interact");
+            //heldObject.BroadcastMessage("Interact");
         }
 
     }
@@ -71,6 +73,9 @@ public class VRGrab : MonoBehaviour
     {
         Debug.Log("Grabbing!");
         heldObject.transform.SetParent(this.transform);
+
+        heldObject.transform.localPosition = Vector3.zero;
+
         heldObject.GetComponent<Rigidbody>().isKinematic = true;
 
         #region Interaction using GetComponent
@@ -78,8 +83,14 @@ public class VRGrab : MonoBehaviour
         grabbale = heldObject.GetComponent<GrabbableObjectVR>();
         if (grabbale)
         {
+            heldObject.transform.localPosition += grabbale.grabOffset;
+
             grabbale.isBeingHeld = true;
             grabbale.controller = controller;
+
+            controller.OnTriggerDown.AddListener(grabbale.OnInteraction);
+            controller.OnTriggerUpdated.AddListener(grabbale.OnUpdatingInteraction);
+            controller.OnTriggerUp.AddListener(grabbale.OnStopInteraction);
         }
 
         #endregion
@@ -94,6 +105,10 @@ public class VRGrab : MonoBehaviour
         {
             grabbale.isBeingHeld = false;
             grabbale.controller = null;
+
+            controller.OnTriggerDown.RemoveListener(grabbale.OnInteraction);
+            controller.OnTriggerUpdated.RemoveListener(grabbale.OnUpdatingInteraction);
+            controller.OnTriggerUp.RemoveListener(grabbale.OnStopInteraction);
         }
 
         #endregion
@@ -108,4 +123,62 @@ public class VRGrab : MonoBehaviour
         heldObject.transform.SetParent(null);
         heldObject = null;
     }
+
+    public void AdvGrab()
+    {
+        // create the fixed joint between the hand and the heldObject
+        FixedJoint fx = gameObject.AddComponent<FixedJoint>();
+        fx.connectedBody = heldObject.GetComponent<Rigidbody>();
+        fx.breakForce = 100000;
+        fx.breakTorque = 100000;
+
+        #region Interaction using GetComponent
+
+        grabbale = heldObject.GetComponent<GrabbableObjectVR>();
+        if (grabbale)
+        {
+            heldObject.transform.localPosition += grabbale.grabOffset;
+
+            grabbale.isBeingHeld = true;
+            grabbale.controller = controller;
+
+            controller.OnTriggerDown.AddListener(grabbale.OnInteraction);
+
+            controller.OnTriggerUpdated.RemoveListener(grabbale.OnUpdatingInteraction);
+
+
+        }
+
+        #endregion
+
+    }
+
+    public void AdvRelease()
+    {
+        if (GetComponent<FixedJoint>())
+        {
+            #region Interaction using GetComponent
+
+            if (grabbale)
+            {
+                grabbale.isBeingHeld = false;
+                grabbale.controller = null;
+
+                controller.OnTriggerDown.RemoveListener(grabbale.OnInteraction);
+            }
+
+            #endregion
+
+            // break the fixed joint
+            Destroy(GetComponent<FixedJoint>());
+
+            // throw!
+            Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+            rb.velocity = controller.velocity * throwForce;
+            rb.angularVelocity = controller.angularVelocity * throwForce;
+        }
+
+        heldObject = null;
+    }
+
 }

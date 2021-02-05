@@ -20,7 +20,7 @@ public class FlashlightVR : GrabbableObjectVR
             if(controller.triggerValue > 0.8f && !enable)
             {
                 enable = true;
-                Interact();
+                OnInteraction();
             }
             if(controller.triggerValue < 0.8f && enable)
             {
@@ -29,7 +29,7 @@ public class FlashlightVR : GrabbableObjectVR
         }
     }
 
-    public override void Interact()
+    public override void OnInteraction()
     {
         flashLight.enabled = !flashLight.enabled;
     }

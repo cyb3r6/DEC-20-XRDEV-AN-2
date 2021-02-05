@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class VRInput : MonoBehaviour
 {
-    public bool isLeftHand;     // if true, this is on the left hand
+    public Hands hand = Hands.Left;
 
     public float triggerValue;
     public float gripValue;
@@ -13,6 +14,13 @@ public class VRInput : MonoBehaviour
     public Vector3 velocity;
     public Vector3 angularVelocity;
 
+    public UnityEvent OnTriggerDown;
+    public UnityEvent OnTriggerUpdated;
+    public UnityEvent OnTriggerUp;
+    public UnityEvent OnGripDown;
+    public UnityEvent OnThumbstickDown;
+    public UnityEvent OnThumbstickUp;
+
     private Vector3 previousPosition;
     private Vector3 previousAngluarRotation;
 
@@ -20,38 +28,25 @@ public class VRInput : MonoBehaviour
     private string gripAxis;
     private string thumbstickX;
     private string thumbstickY;
-
-    public string triggerButton;
-    public string gripButton;
-    public string thumbstickButton;
+    private string triggerButton;
+    private string gripButton;
+    private string thumbstickButton;
     
 
     
     void Awake()
     {
-        if (isLeftHand)
-        {
-            triggerAxis = "LeftTrigger";
-            gripAxis = "LeftGrip";
-            triggerButton = "LeftTriggerButton";
-            gripButton = "LeftGripButton";
-            thumbstickButton = "LeftThumbstickButton";
-            thumbstickX = "LeftThumbstickX";
-            thumbstickY = "LeftThumbstickY";
-        }
-        else
-        {
-            triggerAxis = "RightTrigger";
-            gripAxis = "RightGrip";
-            triggerButton = "RightTriggerButton";
-            gripButton = "RightGripButton";
-            thumbstickButton = "RightThumbstickButton";
-            thumbstickX = "RightThumbstickX";
-            thumbstickY = "RightThumbstickY";
-        }
+        triggerAxis = $"{hand}Trigger";
+        gripAxis = $"{hand}Grip";
+        triggerButton = $"{hand}TriggerButton";
+        gripButton = $"{hand}GripButton";
+        thumbstickButton = $"{hand}ThumbstickButton";
+        thumbstickX = $"{hand}ThumbstickX";
+        thumbstickY = $"{hand}ThumbstickY";
+       
     }
 
-    
+
     void Update()
     {
         triggerValue = Input.GetAxis(triggerAxis);
@@ -61,13 +56,35 @@ public class VRInput : MonoBehaviour
 
         if (Input.GetButtonDown(triggerButton))
         {
-            // do some stuff here
-            // Invoke!
+            OnTriggerDown?.Invoke();
+        }
+        if (Input.GetButton(triggerButton))
+        {
+            OnTriggerUpdated?.Invoke();
         }
 
         if (Input.GetButtonUp(triggerButton))
         {
+            OnTriggerUp?.Invoke();
+        }
+        if (Input.GetButtonDown(gripButton))
+        {
+            OnGripDown?.Invoke();
+        }
+
+        if (Input.GetButtonUp(gripButton))
+        {
             // do some stuff there
+        }
+
+        if (Input.GetButtonDown(thumbstickButton))
+        {
+            OnThumbstickDown?.Invoke();
+        }
+
+        if (Input.GetButtonUp(thumbstickButton))
+        {
+            OnThumbstickUp?.Invoke();
         }
 
         velocity = (this.transform.position - previousPosition) / Time.deltaTime;
