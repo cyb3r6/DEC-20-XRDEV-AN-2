@@ -15,12 +15,6 @@ public class TractorbeamVR : GrabbableObjectVR
         tractorBeam = GetComponent<LineRenderer>();
     }
 
-    
-    void Update()
-    {
-        
-    }
-
     public override void OnUpdatingInteraction()
     {
 
