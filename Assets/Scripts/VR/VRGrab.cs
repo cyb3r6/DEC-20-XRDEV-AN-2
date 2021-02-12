@@ -143,9 +143,8 @@ public class VRGrab : MonoBehaviour
             grabbale.controller = controller;
 
             controller.OnTriggerDown.AddListener(grabbale.OnInteraction);
-
-            controller.OnTriggerUpdated.RemoveListener(grabbale.OnUpdatingInteraction);
-
+            controller.OnTriggerUpdated.AddListener(grabbale.OnUpdatingInteraction);
+            controller.OnTriggerUp.AddListener(grabbale.OnStopInteraction);
 
         }
 
@@ -165,6 +164,8 @@ public class VRGrab : MonoBehaviour
                 grabbale.controller = null;
 
                 controller.OnTriggerDown.RemoveListener(grabbale.OnInteraction);
+                controller.OnTriggerUpdated.RemoveListener(grabbale.OnUpdatingInteraction);
+                controller.OnTriggerUp.RemoveListener(grabbale.OnStopInteraction);
             }
 
             #endregion

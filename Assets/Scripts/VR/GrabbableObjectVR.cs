@@ -12,7 +12,7 @@ public class GrabbableObjectVR : MonoBehaviour
 
     public virtual void OnInteraction() 
     {
-        
+        Debug.Log("Base OnInteraction has been called");
     }
 
     public virtual void OnUpdatingInteraction()
